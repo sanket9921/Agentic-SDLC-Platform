@@ -1,173 +1,194 @@
-Agentic SDLC Platform (PoC)
+# 🧠 Agentic SDLC Platform (PoC)
 
-An experimental local-first AI system that understands a software project, maintains long-term memory of its architecture, and assists developers with planning, impact analysis, and implementation guidance.
+A local-first AI system that understands a software project, maintains
+long-term architectural memory, and assists developers with planning,
+impact analysis, and implementation guidance.
 
-This project explores a simple idea:
+> Instead of asking AI to write code, this project gives AI an
+> understanding of the entire codebase.
 
-Instead of asking an AI to write code, give the AI an understanding of the entire project.
+Most AI coding tools generate code per prompt but forget earlier
+decisions. This platform continuously learns the repository and reasons
+about new features using real project context.
 
-Most AI coding tools generate code per prompt but forget earlier decisions.
-This system continuously learns the repository and reasons about features using project context.
+------------------------------------------------------------------------
 
-What This Project Does
+## 🚩 Problem
 
-The platform scans a repository and builds a persistent knowledge base about the project:
+Modern AI tools (ChatGPT, Copilot, Cursor) are powerful but stateless.
 
-Understands responsibility of each file
+After a few features: - forget previous architecture decisions - suggest
+changes in wrong modules - duplicate logic - slowly break structure
 
-Tracks dependencies between modules
+The real issue is **not code generation --- it's lack of memory**.
 
-Maintains architecture context
+------------------------------------------------------------------------
 
-Answers engineering questions
+## 💡 Solution
 
-Predicts impact of changes
+This system scans a repository and builds a persistent knowledge base
+about the project:
 
-Generates implementation guidance
+-   Understands responsibility of each file
+-   Tracks module dependencies
+-   Maintains architecture context
+-   Answers engineering questions
+-   Predicts change impact
+-   Generates structured implementation guidance
 
-The goal is continuity across the software development lifecycle, not just code generation.
+The goal is continuity across the software development lifecycle, not
+just code generation.
 
-Example Use Cases
+------------------------------------------------------------------------
 
-You can ask questions like:
+## 🔧 Example Questions It Can Answer
 
-Where should authentication logic be implemented?
+-   Where should authentication logic be implemented?
+-   Which files will be affected if I modify the user model?
+-   What database changes are required for a new feature?
+-   How should I implement email verification?
 
-Which files will be affected if I modify the user model?
+The AI answers using project knowledge instead of guessing.
 
-How should I implement email verification?
+------------------------------------------------------------------------
 
-What database changes are required for a new feature?
+## 🏗️ Architecture (PoC)
 
-The system analyzes the existing project instead of guessing.
+Developer (VS Code)\
+↓\
+Local Agent Server (Node.js / TypeScript)\
+↓\
+Project Memory Database (PostgreSQL + pgvector)\
+↓\
+LLM Reasoning (analysis, planning, guidance)
 
-Architecture (PoC)
-Developer (VS Code)
-        ↓
-Local Agent Server (Node.js / TypeScript)
-        ↓
-Project Memory Database (PostgreSQL + pgvector)
-        ↓
-LLM Reasoning (feature planning, analysis, guidance)
+The server continuously learns the repository and stores structured
+knowledge about it.
 
-The agent server continuously learns the repository and stores structured knowledge about it.
+------------------------------------------------------------------------
 
-Core Capabilities
-1. Repository Understanding
+## ✨ Core Capabilities
 
-Scans all source files
+### 1. Repository Understanding
 
-Generates summaries of responsibilities
+-   Scans source files
+-   Generates summaries
+-   Detects dependencies
+-   Stores project knowledge
 
-Detects dependencies
-
-Stores project knowledge
-
-2. Knowledge Query
+### 2. Knowledge Query
 
 Ask architecture-level questions about the project.
 
-3. Change Impact Analysis
+### 3. Change Impact Analysis
 
-Predicts affected modules, database updates, and risks before implementation.
+Predict affected modules, database updates, and risks before
+implementation.
 
-4. Feature Planning
+### 4. Feature Planning
 
-Given a feature request, the system produces step-by-step implementation guidance.
+Generate step-by-step implementation plan for new features.
 
-5. Implementation Guidance
+### 5. Implementation Guidance
 
-Generates structured prompts that can be used directly in coding tools (Cursor, Copilot, etc).
+Produces structured prompts usable in coding tools like Cursor or
+Copilot.
 
-Tech Stack
+------------------------------------------------------------------------
 
-Node.js
+## 🧰 Tech Stack
 
-TypeScript
+-   Node.js
+-   TypeScript
+-   PostgreSQL
+-   pgvector (vector memory)
+-   LLM APIs
 
-PostgreSQL
+------------------------------------------------------------------------
 
-pgvector (semantic memory)
+## ⚙️ Setup
 
-LLM APIs
+### 1. Clone repository
 
-How It Works
-
-Repository is indexed
-
-Each file is summarized
-
-Embeddings are generated
-
-Context is retrieved during queries
-
-AI reasons using project memory
-
-Unlike chat-based AI, this system reasons using stored project knowledge.
-
-Setup
-1. Clone
+``` bash
 git clone <your-repo-url>
 cd agentic-sdlc-platform
-2. Install dependencies
+```
+
+### 2. Install dependencies
+
+``` bash
 npm install
-3. Setup PostgreSQL
+```
 
-Install PostgreSQL and enable pgvector extension:
+### 3. Setup PostgreSQL
 
+Enable pgvector extension:
+
+``` sql
 CREATE EXTENSION vector;
+```
 
-Configure .env:
+Create `.env` file:
 
-OPENAI_API_KEY=your_key
-DATABASE_URL=postgres://user:password@localhost:5432/agentic
-4. Run database migrations
+    OPENAI_API_KEY=your_api_key
+    DATABASE_URL=postgres://user:password@localhost:5432/agentic
+
+### 4. Run migrations
+
+``` bash
 npm run migrate
-5. Start server
+```
+
+### 5. Start server
+
+``` bash
 npm run dev
+```
 
-Server runs on:
+Server runs at:
 
-http://localhost:4000
-API Examples
-Initialize project
-POST /api/project
-Ask a project question
-POST /api/analyze
-Feature impact analysis
-POST /api/impact
-Generate implementation guidance
-POST /api/prompt
-Current Status
+    http://localhost:4000
 
-This repository is a proof of concept.
+------------------------------------------------------------------------
 
-Implemented:
+## 📡 API Examples
 
-repository indexing
+### Analyze project question
 
-project memory
+`POST /api/analyze`
 
-knowledge retrieval
+### Change impact
 
-impact analysis
+`POST /api/impact`
 
-feature planning
+### Generate implementation guidance
 
-Planned:
+`POST /api/prompt`
 
-architecture memory
+------------------------------------------------------------------------
 
-decision tracking
+## 📊 Current Status
 
-automated documentation
+**Implemented** - repository indexing - project memory - knowledge
+retrieval - impact analysis - feature planning
 
-VS Code extension
+**Planned** - architecture memory - decision tracking - automated
+documentation - VS Code extension - multi-agent SDLC workflow
 
-multi-agent SDLC workflow
+------------------------------------------------------------------------
 
-Why This Project Exists
+## 🎯 Goal
 
-AI code generation works well for isolated tasks but struggles with long-term projects because it lacks memory.
+AI code generation works well for isolated tasks but struggles with
+long-term projects because it lacks continuity.
 
-This project experiments with giving AI a persistent understanding of a codebase so it can behave more like a software architect than a code generator.
+This project explores giving AI persistent understanding of a codebase
+so it can behave more like a **software architect** rather than a code
+generator.
+
+------------------------------------------------------------------------
+
+## 📄 License
+
+MIT
